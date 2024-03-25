@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const EventCard = ({ event }) => {
   const formatTime = (timeString) => {
-    let [hours, minutes] = timeString.split(":");
+    let [hours, minutes] = timeString?.split(":");
     let ampm = hours >= 12 ? "PM" : "AM";
     hours = hours % 12;
     hours = hours ? hours : 12; // 12 instead of 0
@@ -12,6 +12,7 @@ const EventCard = ({ event }) => {
   };
   return (
     <div className="event-card">
+      <img width={"250px"} src={event.images[4].url}></img>
       <h3>{event.name}</h3>
       <p>
         <strong>Date:</strong> {event.dates.start.localDate}
