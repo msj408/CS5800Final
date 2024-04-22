@@ -3,10 +3,12 @@ import axios from "axios";
 import EventCard from "./components/EventCard";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Select from "react-select";
+import DatePicker from "react-datepicker";
 const TicketmasterForm = () => {
   const apiKey = "o1U6AskSchLZSkIvnoZpAQIOi7q7APGh";
   const [keyword, setKeyword] = useState("");
   const [city, setCity] = useState("");
+  const [startDateTime, setStartDateTime] = useState(new Date());
   const [countryCode, setCountryCode] = useState("US"); // Default to US
   const [results, setResults] = useState([]);
   const [size, setSize] = useState([]);
@@ -34,10 +36,12 @@ const TicketmasterForm = () => {
       countryCode,
       size,
       radius,
+      startDateTime,
     };
+    const headers = { "Access-Control-Allow-Origin": "*" };
 
     try {
-      const response = await axios.get(apiUrl, { params });
+      const response = await axios.get(apiUrl, { params }, { headers });
       setResults(response.data._embedded?.events || []);
     } catch (error) {
       console.error("Error fetching events:", error);

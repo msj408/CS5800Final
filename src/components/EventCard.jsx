@@ -18,7 +18,10 @@ const EventCard = ({ event }) => {
         <strong>Date:</strong> {event.dates.start.localDate}
       </p>
       <p>
-        <strong>Time:</strong> {formatTime(event.dates.start.localTime)}
+        <strong>Time:</strong>{" "}
+        {event.dates.start.localTime
+          ? formatTime(event.dates.start.localTime)
+          : event.dates.start.localTime}
       </p>
       <p>
         <strong>Venue:</strong> {event._embedded.venues[0].name}
