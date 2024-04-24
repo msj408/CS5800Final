@@ -6,12 +6,14 @@ import Select from "react-select";
 import DatePicker from "react-datepicker"; // Import DatePicker
 import "react-datepicker/dist/react-datepicker.css"; // Import CSS for DatePicker
 import GooglePlacesAutocomplete from "react-google-autocomplete";
-
+import NYCsearch from "./NYCsearch.json";
+import SFsearch from "./SFsearch.json";
 const TicketmasterForm = () => {
   const apiKey = "o1U6AskSchLZSkIvnoZpAQIOi7q7APGh";
   const [keyword, setKeyword] = useState("");
   const [city, setCity] = useState("");
   const [googleCity, setGoogleCity] = useState("");
+  const [googleCityInput, setGoogleCityInput] = useState("");
   const [countryCode, setCountryCode] = useState("US"); // Default to US
   const [results, setResults] = useState([]);
   const [size, setSize] = useState([]);
@@ -21,7 +23,24 @@ const TicketmasterForm = () => {
   const [isEventSelected, setIsEventSelected] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState("");
   // const [startDate, setStartDate] = useState(new Date("2024-05-25"));
-
+  // const graph = {
+  //   source: "Hoboken, NJ",
+  //   destination: "253 West 125th Street, New York, NY",
+  //   edges: [
+  //     ["Hoboken, NJ", "6th st", 100],
+  //     ["6th st", "NY 495 E", 1000],
+  //     ["NY 495 E", "NY-9A S", 6649],
+  //     ["NY-9A S", "42nd st", 232],
+  //     ["42nd st", "NY-9A N", 1002],
+  //     ["NY-9A N", "125th st", 45],
+  //     ["125th st", "253 West 125th Street, New York, NY", 1000],
+  //     ["Hoboken, NJ", "6th st route 2", 100],
+  //     ["6th st route 2", "NY 495 W", 1000],
+  //     ["I 95 N", "NY-9A S route 2", 18000],
+  //     ["NY-9A S route 2", "125th st", 6000],
+  //     ["125th st route 2", "253 West 125th Street, New York, NY", 1000],
+  //   ],
+  // };
   const favoriteArtists = [
     { value: "artist1", label: "Taylor Swift" },
     { value: "artist2", label: "Beyonce" },
@@ -75,11 +94,72 @@ const TicketmasterForm = () => {
   const handleAddressSelect = (address) => {
     setSelectedAddress(address);
   };
-  const handleCalculateShortestPath = () => {
-    alert(
-      `Ending Address: ${selectedAddress}, Starting Address: ${googleCity}`
-    );
+  const handleCalculateShortestPath = async () => {
+    let graphToSearch;
+    switch (selectedAddress) {
+      case "253 West 125th Street, New York, NY":
+        graphToSearch = NYCsearch;
+        break;
+      case "222 Mason Street, San Francisco, CA":
+        graphToSearch = SFsearch;
+        break;
+      default:
+        graphToSearch = null;
+        break;
+    }
+
+    console.log(selectedAddress);
+    try {
+      const res = await axios.post(
+        "https://umkz998vz0.execute-api.us-west-1.amazonaws.com/v1/route",
+        {
+          graph: graphToSearch,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(res.data.path);
+      console.log(res.data.path + " " + res.data.distance);
+      const path = res.data.path.join("\n");
+      alert(
+        "The shortest path is \n" +
+          path +
+          " " +
+          "\nwith a distance of " +
+          res.data.distance +
+          " meters"
+      );
+    } catch (err) {
+      console.log(err);
+    }
   };
+
+  //   try {
+  //     const response = await axios.get("http://localhost:3000/placeAPI", {
+
+  //       params: {
+  //         origin: googleCity.formatted_address,
+  //         destination: selectedAddress,
+  //         key: "AIzaSyD8pBnMosh59Ix2-EriTkgP0XO-yvoQQCw",
+  //         alternatives: true,
+  //       },
+  //       headers: {
+  //         "Access-Control-Allow-Origin": "*",
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+
+  //     // Handle the response data here
+  //     console.log(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching directions:", error);
+  //   }
+  // };
+
+  //https://umkz998vz0.execute-api.us-west-1.amazonaws.com/v1/route
 
   return (
     <div>
@@ -88,7 +168,7 @@ const TicketmasterForm = () => {
         <label htmlFor="city">City:</label>
         <GooglePlacesAutocomplete
           apiKey="AIzaSyD8pBnMosh59Ix2-EriTkgP0XO-yvoQQCw"
-          onSelect={(place) => setGoogleCity(place.formatted_address)}
+          onPlaceSelected={(place) => setGoogleCity(place)}
           placeholder="Enter city"
           inputStyle={{ width: "100%" }}
           autocompletionRequest={{
@@ -152,7 +232,7 @@ const TicketmasterForm = () => {
             dateFormat="yyyy-MM-dd"
           />
         </div> */}
-        <h2>My Preferences</h2>
+        {/* <h2>My Preferences</h2>
         <label htmlFor="FavoriteArtists">Favorite Artists:</label>
         <Select
           id="FavoriteArtists"
@@ -170,12 +250,17 @@ const TicketmasterForm = () => {
           options={favoriteArtists}
           value={selectedArtists}
           onChange={setSelectedArtists}
-        />
-        <button type="submit">Search Events</button>
+        /> */}
+        <button className="btn btn-secondary" type="submit">
+          Search Events
+        </button>
       </form>
       <div>
         {isEventSelected && (
-          <button onClick={handleCalculateShortestPath}>
+          <button
+            className="btn btn-success"
+            onClick={handleCalculateShortestPath}
+          >
             Calculate Shortest Path
           </button>
         )}

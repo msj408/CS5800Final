@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const EventCard = ({ event, onSelect }) => {
+const EventCard = ({ event, onSelect, onAddressSelect }) => {
   const [selectedAddress, setSelectedAddress] = useState(null);
 
   // const formatTime = (timeString) => {

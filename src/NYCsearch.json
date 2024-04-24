@@ -1,0 +1,18 @@
+{
+  "source": "Hoboken, NJ",
+  "destination": "253 West 125th Street, New York, NY",
+  "edges": [
+    ["Hoboken, NJ", "6th st", 100],
+    ["6th st", "NY 495 E", 1000],
+    ["NY 495 E", "NY-9A S", 6649],
+    ["NY-9A S", "42nd st", 232],
+    ["42nd st", "NY-9A N", 1002],
+    ["NY-9A N", "125th st", 45],
+    ["125th st", "253 West 125th Street, New York, NY", 1000],
+    ["Hoboken, NJ", "6th st route 2", 100],
+    ["6th st route 2", "NY 495 W", 1000],
+    ["I 95 N", "NY-9A S route 2", 18000],
+    ["NY-9A S route 2", "125th st", 6000],
+    ["125th st route 2", "253 West 125th Street, New York, NY", 1000]
+  ]
+}
