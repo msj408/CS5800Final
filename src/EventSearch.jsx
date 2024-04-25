@@ -167,7 +167,7 @@ const TicketmasterForm = () => {
         <h2>MY Location</h2>
         <label htmlFor="city">City:</label>
         <GooglePlacesAutocomplete
-          apiKey="AIzaSyD8pBnMosh59Ix2-EriTkgP0XO-yvoQQCw"
+          apiKey="AIzaSyBH4me4no9ydTr4DEAzibCaOlkbfK5xtGA"
           onPlaceSelected={(place) => setGoogleCity(place)}
           placeholder="Enter city"
           inputStyle={{ width: "100%" }}
